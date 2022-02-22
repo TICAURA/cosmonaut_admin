@@ -66,6 +66,7 @@ public class CatFacultadPoderController {
         }
     }
 
+
     @BitacoraSistema
     @Operation(summary = "${cosmonaut.controller.catFacultadPoder.guardaAsentamiento.resumen}",
             description = "${cosmonaut.controller.catFacultadPoder.guardaAsentamiento.descripcion}",

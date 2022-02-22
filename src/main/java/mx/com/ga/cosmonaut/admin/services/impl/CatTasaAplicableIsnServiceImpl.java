@@ -6,11 +6,9 @@ import mx.com.ga.cosmonaut.common.entity.catalogo.negocio.CatTasaAplicableIsn;
 import mx.com.ga.cosmonaut.common.exception.ServiceException;
 import mx.com.ga.cosmonaut.common.repository.catalogo.negocio.CatTasaAplicableIsnRepository;
 import mx.com.ga.cosmonaut.common.util.Constantes;
-import mx.com.ga.cosmonaut.common.util.Utilidades;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Singleton
@@ -108,45 +106,16 @@ public class CatTasaAplicableIsnServiceImpl implements CatTasaAplicableIsnServic
             }
 
             Set<CatTasaAplicableIsn> dat = new HashSet<>();
-            int cont=0;
             for(CatTasaAplicableIsn item : valoresTasaAplicableIsn){
-                        if (verificaFechasTraslapar(item)) {
-                            cont = cont +1;
-                            item.setEsActivo(Constantes.ESTATUS_ACTIVO);
-                            dat.add(this.catTasaAplicableIsnRepository.update(item));
-                        }
-            }
-            if (valoresTasaAplicableIsn.size() == cont)
-            {
-                return new RespuestaGenerica(dat,Constantes.RESULTADO_EXITO,Constantes.EXITO);
-            } else
-            {
-                return new RespuestaGenerica(dat,Constantes.RESULTADO_ERROR,Constantes.FECHAS_TRASLAPE);
+                        item.setEsActivo(Constantes.ESTATUS_ACTIVO);
+                        dat.add(this.catTasaAplicableIsnRepository.update(item));
             }
 
-
+            return new RespuestaGenerica(dat,Constantes.RESULTADO_EXITO,Constantes.EXITO);
         } catch (Exception e) {
             throw new ServiceException(Constantes.ERROR_CLASE + this.getClass().getSimpleName()
                     + Constantes.ERROR_METODO + " modificarMultipleISN " + Constantes.ERROR_EXCEPCION, e);
         }
-    }
-
-    private boolean verificaFechasTraslapar (CatTasaAplicableIsn item){
-        boolean editable = false;
-        CatTasaAplicableIsn editableCompara = catTasaAplicableIsnRepository.findByTasaAplicableIsnIdAndAndEsActivo(item.getTasaAplicableIsnId());
-        String finicioBD=Utilidades.fechaTexto(editableCompara.getFechaInicio());
-        String finicio=Utilidades.fechaTexto(item.getFechaInicio());
-        String ffinBD=Utilidades.fechaTexto(editableCompara.getFechaFin());
-        String ffin=Utilidades.fechaTexto(item.getFechaFin());
-        if ( finicioBD.equals(finicio) && ffinBD.equals(ffin))
-        {
-            editable = true;
-        } else {
-            List<CatTasaAplicableIsn> rep = catTasaAplicableIsnRepository.findByIdEstadoEstadoTraslaparFechasEditar(item.getCestado().getEstadoId(),item.getFechaInicio(),item.getFechaFin(),item.getFechaInicio(),item.getFechaFin());
-            if (rep.size() == 0)
-                editable = true;
-        }
-        return editable;
     }
 
     private RespuestaGenerica validarCamposObligatorios(CatTasaAplicableIsn catTasaAplicableIsn) throws ServiceException {

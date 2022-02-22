@@ -22,6 +22,7 @@ public class CatEstadoController {
     @Inject
     private CatEstadoService catEstadoService;
 
+
     @Operation(summary = "${cosmonaut.controller.catEstados.findAll.resumen}",
             description = "${cosmonaut.controller.catEstados.findAll.descripcion}",
             operationId = "catEstados.findAll")
